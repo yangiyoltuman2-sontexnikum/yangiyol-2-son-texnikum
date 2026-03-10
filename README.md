@@ -1,1 +1,1 @@
-# yangiyol-2-son-texnikum
+ yangiyol-2-son-texnikum
