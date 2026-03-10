@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8" />
+  <title>Bilimni baholash testi</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f2f6fa;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .container {
+      background: #fff;
+      width: 500px;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    h2 { text-align: center; }
+    .hidden { display: none; }
+    button {
+      background: #4CAF50;
+      color: #fff;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    button:hover { background: #43a047; }
+    .option { margin: 8px 0; }
+    #timer {
+      text-align: right;
+      font-weight: bold;
+      color: #d32f2f;
+    }
+    #username { margin-left: 120px; padding: 12px; }
+    #username1 { margin-left: 150px; }
+    #test_platform { color: red; }
+    #username11 { margin-left: 110px; font-size: 36px; }
+  </style>
+</head>
+
+<body>
+<div class="container">
+
+  <!-- START -->
+  <div id="startScreen">
+    <h2 id="test_platform">Test platformasi</h2>
+    <h2>24–25 ta javobga 5 baho</h2>
+    <h2>21–23 ta javobga 4 baho</h2>
+    <h2>18–20 ta javobga 3 baho</h2>
+    <h2>0–17 ta javobga 2 baho</h2>
+    
+    <br><br>
+    <button id="username1" onclick="startTest()">Testni boshlash</button>
+  </div>
+
+  <!-- TEST -->
+  <div id="testScreen" class="hidden">
+    <div id="timer">20:00</div>
+    <h3 id="question"></h3>
+    <div id="options"></div>
+    <button onclick="nextQuestion()">Keyingi</button>
+  </div>
+
+  <!-- RESULT -->
+  <div id="resultScreen" class="hidden">
+    <h2>Natija</h2>
+    <p id="resultText"></p>
+  </div>
+
+</div>
+
+<script>
+/* ================== SAVOLLAR (100 TA) ================== */
+
+ const questions = [
+
+/* ===== WEB ASOSLARI (1–15) ===== */
+{ q: "Web dasturlash nima?", options: ["Grafika yaratish", "Veb sayt va ilovalar yaratish", "Kompyuter yig‘ish", "Matn terish"], answer: 1 },
+{ q: "Web so‘zining ma’nosi?", options: ["Tarmoq", "Fayl", "Dastur", "Grafika"], answer: 0 },
+{ q: "Veb sahifa qayerda ishlaydi?", options: ["Serverda", "OSda", "BIOSda", "Brauzerda"], answer: 3 },
+{ q: "Veb sahifalar qaysi formatda bo‘ladi?", options: ["TXT", "HTML", "DOC", "PDF"], answer: 1 },
+{ q: "Brauzer vazifasi nima?", options: ["Kod yozish", "Bazani boshqarish", "Server sozlash", "Sahifani ko‘rsatish"], answer: 3 },
+
+/* ===== HTML (16–45) ===== */
+{ q: "HTML nimaning qisqartmasi?", options: ["Hyper Text Markup Language", "High Text Machine Language", "Home Tool Markup", "Hyperlinks Text"], answer: 0 },
+{ q: "HTML hujjat qaysi teglardan boshlanadi?", options: ["head", "body", "html", "title"], answer: 2 },
+{ q: "Sahifa nomi qaysi tegda yoziladi?", options: ["body", "meta", "head", "title"], answer: 3 },
+{ q: "Matn abzatsi uchun teg?", options: ["p", "b", "h1", "div"], answer: 0 },
+{ q: "Eng katta sarlavha qaysi?", options: ["h6", "h4", "h2", "h1"], answer: 3 },
+{ q: "Qalin matn tegi?", options: ["b", "i", "u", "p"], answer: 0 },
+{ q: "Kursiv matn?", options: ["b", "i", "u", "br"], answer: 1 },
+{ q: "Qatorni uzish tegi?", options: ["p", "hr", "br", "div"], answer: 2 },
+{ q: "Gorizontal chiziq?", options: ["line", "hr", "br", "border"], answer: 1 },
+{ q: "Rasm joylash tegi?", options: ["img", "image", "src", "pic"], answer: 0 },
+{ q: "Rasm manzili qaysi atribut?", options: ["alt", "href", "src", "link"], answer: 2 },
+{ q: "Gipermurojaat tegi?", options: ["ab", "link", "a", "url"], answer: 2 },
+{ q: "Yangi oynada ochish atributi?", options: ["_new", "_blank", "_open", "_self"], answer: 1 },
+{ q: "Tartibli ro‘yxat?", options: ["ul", "el", "li", "ol"], answer: 3 },
+{ q: "Jadval tegi?", options: ["ta", "tr", "td", "table"], answer: 3 },
+
+/* ===== CSS (46–85) ===== */
+{ q: "CSS nima uchun?", options: ["Tuzilma", "Dizayn", "Server", "Bazalar"], answer: 1 },
+{ q: "CSS to‘liq nomi?", options: ["Color Style Sheets", "Creative Style Sheets", "Cascading Style Sheets", "Computer Style Sheets"], answer: 2 },
+{ q: "CSS qaysi faylda yoziladi?", options: [".html", ".scc", ".js", ".css"], answer: 3 },
+{ q: "Matn rangini o‘zgartirish?", options: ["font", "color", "background", "text"], answer: 1 },
+{ q: "Fon rangi qaysi?", options: ["bgcolor", "background-color", "color-bg", "back"], answer: 1 },
+{ q: "Shrift o‘lchami?", options: ["font-size", "text-size", "size-font", "font"], answer: 0 },
+{ q: "Class belgisi?", options: ["#", ".", "*", "@"], answer: 1 },
+{ q: "ID belgisi?", options: [".", "&", "$", "#"], answer: 3 },
+{ q: "Inline CSS qayerda yoziladi?", options: ["head", "body", "style atributida", "alohida faylda"], answer: 2 },
+{ q: "External CSS qanday ulanadi?", options: ["script", "css", "link", "style"], answer: 2 },
+{ q: "Margin nima?", options: ["Ichki joy", "Tashqi joy", "Rang", "Shrift"], answer: 1 },
+{ q: "Padding nima?", options: ["Tashqi joy", "Ichki joy", "Chegara", "Fon"], answer: 1 },
+{ q: "Border nima?", options: ["Fon", "Chegara", "Rang", "Matn"], answer: 1 },
+{ q: "Display flex nimaga xizmat qiladi?", options: ["Animatsiya", "Moslashuvchan joylashuv", "Rang", "Shrift"], answer: 1 },
+{ q: "Bootstrap bu?", options: ["CMS", "CSS framework", "Server", "Til"], answer: 1 },
+{ q: "Tailwind CSS turi?", options: ["Classic", "Utility-first", "CMS", "JS"], answer: 1 },
+
+/* ===== FRONT-END (86–100) ===== */
+{ q: "Front-end nima?", options: ["Server", "Foydalanuvchi qismi", "Baza", "OS"], answer: 1 },
+{ q: "Front-end tillari?", options: ["HTML, CSS, JS", "PHP, MySQL", "Python", "C++"], answer: 0 },
+{ q: "JavaScript nima?", options: ["Dizayn", "Interaktivlik", "Server", "CMS"], answer: 1 },
+
+/* ===== CMS (101–125) ===== */
+{ q: "CMS nima?", options: ["Server", "Kontent boshqarish tizimi", "Brauzer", "Til"], answer: 1 },
+{ q: "Eng mashhur CMS?", options: ["WordPress", "HTML", "CSS", "JS"], answer: 0 },
+{ q: "WordPress qaysi tilga asoslangan?", options: ["Python", "Java", "PHP", "C#"], answer: 2 },
+{ q: "Joomla bu?", options: ["CMS", "Server", "Til", "Brauzer"], answer: 0 },
+{ q: "Drupal bu?", options: ["Framework", "CMS", "Brauzer", "OS"], answer: 1 },
+{ q: "Bitrix nima?", options: ["CMS", "Server", "HTML", "CSS"], answer: 0 },
+
+/* ===== SERVER VA BAZA (126–150) ===== */
+{ q: "XAMPP nima?", options: ["CMS", "Local server", "Brauzer", "OS"], answer: 1 },
+{ q: "XAMPP tarkibi?", options: ["Apache, MySQL, PHP", "HTML, CSS", "JS", "Python"], answer: 0 },
+{ q: "MySQL nima?", options: ["Til", "Ma’lumotlar bazasi", "Server", "Brauzer"], answer: 1 },
+{ q: "Localhost nima?", options: ["Internet", "Mahalliy server", "Sayt", "Hosting"], answer: 1 },
+{ q: "WordPressni o‘rnatish uchun nima kerak?", options: ["MySQL", "HTML", "CSS", "JS"], answer: 0 },
+
+{ q: "HTML5 ning asosiy afzalligi nima?", options: ["Eski brauzerlar", "Multimedia qo‘llab-quvvatlashi", "Faqat matn", "Server ishlashi"], answer: 1 },
+{ q: "<header> tegi nimaga xizmat qiladi?", options: ["Pastki qism", "Sarlavha qismi", "Yon menyu", "Rasm"], answer: 1 },
+{ q: "<footer> tegi nimani bildiradi?", options: ["Sahifa boshi", "Pastki qism", "Asosiy kontent", "Rasm"], answer: 1 },
+{ q: "<section> tegi nima uchun?", options: ["Bo‘lim ajratish", "Rasm", "Havola", "Jadval"], answer: 0 },
+{ q: "<article> tegi nimaga mo‘ljallangan?", options: ["Mustaqil kontent", "Reklama", "Menyu", "Sarlavha"], answer: 0 },
+{ q: "Audio joylash tegi?", options: ["<sound>", "<music>", "<audio>", "<mp3>"], answer: 2 },
+{ q: "Video joylash tegi?", options: ["<movie>", "<media>", "<video>", "<mp4>"], answer: 2 },
+{ q: "Formani yuborish tegi?", options: ["input", "button", "submit>", "send"], answer: 1 },
+{ q: "Form tegi?", options: ["data", "input", "form", "table"], answer: 2 },
+{ q: "Input type='password' nima qiladi?", options: ["Matnni yashiradi", "Email tekshiradi", "Raqam oladi", "Sana oladi"], answer: 0 },
+
+/* ===== CSS CHUQURLASHTIRILGAN (171–185) ===== */
+{ q: "CSS position: absolute nimani bildiradi?", options: ["Oqimda joylashish", "Ekranga nisbatan", "Ota elementga nisbatan", "Statik"], answer: 2 },
+{ q: "position: fixed nima qiladi?", options: ["Scroll bilan yuradi", "Markazga joylashadi", "Yo‘qoladi", "Joyida qoladi"], answer: 3 },
+{ q: "Z-index nima uchun?", options: ["Rang", "Qatlam ustuvorligi", "Shrift", "O‘lcham"], answer: 1 },
+{ q: "Hover qachon ishlaydi?", options: ["Sichqoncha ustiga borganda", "Bosilganda", "Yuklanganda", "Chiqilganda"], answer: 0 },
+{ q: "Responsive dizayn nima?", options: ["Faqat kompyuter", "Moslashuvchan dizayn", "Faqat mobil", "Statik sahifa"], answer: 1 },
+{ q: "Media query nima uchun?", options: ["Animatsiya", "Shrift", "Moslashuvchanlik", "Rang"], answer: 2 },
+{ q: "Flexbox nima?", options: ["Grid turi", "Moslashuvchan joylashuv modeli", "Animatsiya", "CMS"], answer: 1 },
+{ q: "Grid CSS nima?", options: ["Jadval", "Rang", "Shrift", "Ikki o‘lchamli layout"], answer: 3 },
+{ q: "Bootstrap grid nechta ustundan iborat?", options: ["10", "11", "12", "16"], answer: 2 },
+{ q: "Tailwind CSS ning afzalligi?", options: ["Katta fayl", "Tez dizayn", "CMS", "Server"], answer: 1 },
+{ q: "rem o‘lchov birligi nimaga bog‘liq?", options: ["html", "body", "ota element", "ekran"], answer: 0 },
+{ q: "em birligi nimaga bog‘liq?", options: ["html", "ota element", "ekran", "px"], answer: 1 },
+{ q: "Opacity nima qiladi?", options: ["Rang", "O`lcham", "Shaffoflik", "Joylashuv"], answer: 2 },
+{ q: "Transition nima?", options: ["Grid", "Rang", "Shrift", "Animatsiya o‘tishi"], answer: 3 },
+{ q: "Animation CSS nima?", options: ["Harakat", "Shrift", "Fon", "Jadval"], answer: 0 },
+
+/* ===== SERVER, CMS, WORDPRESS (186–200) ===== */
+{ q: "Local server nima uchun kerak?", options: ["Internet", "Sinov va ishlab chiqish", "Reklama", "Hosting"], answer: 1 },
+{ q: "Apache nima?", options: ["Brauzer", "Web server", "CMS", "Til"], answer: 1 },
+{ q: "phpMyAdmin nima?", options: ["CMS", "MySQL boshqaruvi", "Server", "Brauzer"], answer: 1 },
+{ q: "WordPress admin panel manzili?", options: ["/admin", "/panel", "/login", "/wp-admin"], answer: 3 },
+{ q: "WordPressda mavzu nima deyiladi?", options: ["Plugin", "Widget", "Theme", "Post"], answer: 2 },
+{ q: "Plugin vazifasi?", options: ["Dizayn", "Funksiyani kengaytirish", "Server", "Bazani o‘chirish"], answer: 1 },
+{ q: "Post nima?", options: ["Sahifa", "Maqola", "Menyu", "Rasm"], answer: 1 },
+{ q: "Page nima?", options: ["Statik sahifa", "Yangilik", "Plugin", "Kategoriya"], answer: 0 },
+{ q: "MySQL jadvali nimadan iborat?", options: ["Qator va ustun", "Rasm", "Fayl", "Kod"], answer: 2 },
+{ q: "Hosting nima?", options: ["Mahalliy server", "joy", "CMS", "Internetda joy"], answer: 3 }
+];
+/* ================== 25 TA TASODIFIY SAVOL ================== */
+function shuffleArray(arr) {
+  return arr.sort(() => Math.random() - 0.5);
+}
+
+let selectedQuestions = shuffleArray([...questions]).slice(0, 25);
+
+/* ================== O'ZGARUVCHILAR ================== */
+let currentQuestion = 0;
+let score = 0;
+let time = 20 * 60;
+let timerInterval;
+let username = "";
+
+/* ================== FUNKSIYALAR ================== */
+function startTest() {
+  
+
+  
+  document.getElementById("startScreen").classList.add("hidden");
+  document.getElementById("testScreen").classList.remove("hidden");
+  startTimer();
+  loadQuestion();
+}
+
+function startTimer() {
+  timerInterval = setInterval(() => {
+    time--;
+    const m = Math.floor(time / 60);
+    const s = time % 60;
+    document.getElementById("timer").textContent = `${m}:${s < 10 ? "0" : ""}${s}`;
+    if (time <= 0) finishTest();
+  }, 1000);
+}
+
+function loadQuestion() {
+  const q = selectedQuestions[currentQuestion];
+  document.getElementById("question").textContent = q.q;
+  const optDiv = document.getElementById("options");
+  optDiv.innerHTML = "";
+  q.options.forEach((opt, i) => {
+    optDiv.innerHTML += `
+      <div class="option">
+        <input type="radio" name="option" value="${i}"> ${opt}
+      </div>`;
+  });
+}
+
+function nextQuestion() {
+  const selected = document.querySelector('input[name="option"]:checked');
+  if (selected && parseInt(selected.value) === selectedQuestions[currentQuestion].answer) {
+    score++;
+  }
+  currentQuestion++;
+  if (currentQuestion < selectedQuestions.length) loadQuestion();
+  else finishTest();
+}
+
+function finishTest() {
+  clearInterval(timerInterval);
+  document.getElementById("testScreen").classList.add("hidden");
+  document.getElementById("resultScreen").classList.remove("hidden");
+  document.getElementById("resultText").textContent =
+    `siz ${selectedQuestions.length} ta savoldan ${score} tasiga to‘g‘ri javob berdingiz.`;
+}
+</script>
+
+</body>
+</html>
