@@ -1,0 +1,1 @@
+# yangiyol-2-son-texnikum
